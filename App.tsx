@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, TextInput, Text, ScrollView, Image } from 'react-native';
+import { StyleSheet, View, Button, TextInput, Text, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { Image } from 'expo-image';
 
 export default function App() {
   const [numberInput, setNumberInput] = useState<string>('');
@@ -51,7 +52,7 @@ export default function App() {
       setNumberInput('');
       setMarkedDates({ ...markedDates });
     } else {
-      alert('Please enter a number between 1 and 24.');
+      setErrorFlag(true);
     }
   };
 
@@ -65,83 +66,91 @@ export default function App() {
     return 'yellow';
   };
 
+  const [errorFlag, setErrorFlag] = useState(false);
+
+  useEffect(() => {
+    if (errorFlag) {
+      alert('Error: Please enter a number between 1 and 24.');
+      setErrorFlag(false);
+    }
+  }, [errorFlag]);
+
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View>
-        <Image
-          source={require('./images/torestorpmaleri.png')}
-          style={{ width: 400, height: 200 }}
-        />
-      </View>
-      <Calendar
-        style={{
-          height: 400,
-          width: 400,
-        }}
-        theme={{
-          selectedDayTextColor: 'black',
-          todayTextColor: 'black',
-        }}
-        markedDates={markedDates}
-        firstDay={1}
-        hideExtraDays={true}
-        onDayPress={(day) => {
-          const dateStr = day.dateString;
-          if (markedDates[dateStr]) {
-            markedDates[dateStr].selected = !markedDates[dateStr].selected;
-          } else {
-            markedDates[dateStr] = {
-              marked: false,
-              selected: true,
-              selectedColor: 'lightblue',
-            };
-          }
-          setMarkedDates({ ...markedDates });
-        }}
-        // Custom rendering of calendar dates
-        renderDay={(day: { year: number; month: number; day: number }, dateInfo: { marked: boolean; selected: boolean; hoursWorked?: number; dotColor?: string }) => (
-          <View style={{ backgroundColor: getCalendarBackgroundColor(dateInfo), padding: 5 }}>
-            <Text style={{ textAlign: 'center', color: 'black' }}>{day.day}</Text>
-            {dateInfo.dotColor && <Text style={{ color: dateInfo.dotColor }}>•</Text>}
-          </View>
-        )}
-      />
-      <StatusBar style="auto" backgroundColor='white' />
-      <TextInput
-        placeholder='Hours'
-        style={styles.hourInputContainer}
-        keyboardType="numeric"
-        onChangeText={(text) => setNumberInput(text)}
-        value={numberInput}
-      />
-      <Button
-        title="Add Hours"
-        onPress={handleButtonPress}
-      />
-      <Button
-        title="See hours worked for this month"
-        onPress={handleButtonPress}
-      />
-      {Object.keys(markedDates).map((date) => {
-        const dateInfo = markedDates[date];
-        const currentDate = new Date(date);
-
-        // Check if the current date is in the same month as the current date displayed on the calendar
-        if (currentDate.getMonth() === new Date().getMonth() && currentDate.getFullYear() === new Date().getFullYear()) {
-          return (
-            <View key={date}>
-              <Text>
-                Date: {date}, Hours Worked: {dateInfo.hoursWorked || '0'}
-              </Text>
+    <View style={styles.container}>
+        <View>
+          <Image
+            source={require('./images/torestorpmaleri.png')}
+            style={{ width: 400, height: 200 }}
+          />
+        </View>
+        <Calendar
+          style={{
+            height: 400,
+            width: 400,
+          }}
+          theme={{
+            selectedDayTextColor: 'black',
+            todayTextColor: 'black',
+          }}
+          markedDates={markedDates}
+          firstDay={1}
+          hideExtraDays={true}
+          onDayPress={(day) => {
+            const dateStr = day.dateString;
+            if (markedDates[dateStr]) {
+              markedDates[dateStr].selected = !markedDates[dateStr].selected;
+            } else {
+              markedDates[dateStr] = {
+                marked: false,
+                selected: true,
+                selectedColor: 'lightblue',
+              };
+            }
+            setMarkedDates({ ...markedDates });
+          }}
+          // Custom rendering of calendar dates
+          renderDay={(day: { year: number; month: number; day: number }, dateInfo: { marked: boolean; selected: boolean; hoursWorked?: number; dotColor?: string }) => (
+            <View style={{ backgroundColor: getCalendarBackgroundColor(dateInfo), padding: 5 }}>
+              <Text style={{ textAlign: 'center', color: 'black' }}>{day.day}</Text>
+              {dateInfo.dotColor && <Text style={{ color: dateInfo.dotColor }}>•</Text>}
             </View>
-          );
-        }
+          )}
+        />
+        <StatusBar style="auto" backgroundColor='white' />
+        <TextInput
+          placeholder='Hours'
+          style={styles.hourInputContainer}
+          keyboardType="numeric"
+          onChangeText={(text) => setNumberInput(text)}
+          value={numberInput}
+        />
+        <Button
+          title="Add Hours"
+          onPress={handleButtonPress}
+        />
+        <Button
+          title="See hours worked for this month"
+          onPress={handleButtonPress}
+        />
+        {Object.keys(markedDates).map((date) => {
+          const dateInfo = markedDates[date];
+          const currentDate = new Date(date);
 
-        // Return null for dates that are not in the current month
-        return null;
-      })}
+          // Check if the current date is in the same month as the current date displayed on the calendar
+          if (currentDate.getMonth() === new Date().getMonth() && currentDate.getFullYear() === new Date().getFullYear()) {
+            return (
+              <View key={date}>
+                {/*<Text>
+                Date: {date}, Hours Worked: {dateInfo.hoursWorked || '0'}
+              </Text>*/}
+              </View>
+            );
+          }
 
-    </ScrollView>
+          // Return null for dates that are not in the current month
+          return null;
+        })}
+    </View>
   );
 }
 
@@ -162,5 +171,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: 100,
     height: 40,
-  }
+  },
+  blurContainer: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
