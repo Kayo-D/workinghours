@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, TextInput, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Button, TextInput, Text, ScrollView, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { Image } from 'expo-image';
 
@@ -52,6 +52,7 @@ export default function App() {
       setNumberInput('');
       setMarkedDates({ ...markedDates });
     } else {
+      setBlurLevel(1);
       setErrorFlag(true);
     }
   };
@@ -70,10 +71,16 @@ export default function App() {
 
   useEffect(() => {
     if (errorFlag) {
-      alert('Error: Please enter a number between 1 and 24.');
+      Alert.alert('Error:','Please enter a number between 1 and 24.',[{
+        text: 'Cancel',
+        onPress: () => setBlurLevel(0),
+        style: 'cancel',
+      },]);
       setErrorFlag(false);
     }
   }, [errorFlag]);
+
+  let [imageBlur, setBlurLevel] = useState(0);
 
   return (
     <View style={styles.container}>
@@ -81,6 +88,7 @@ export default function App() {
           <Image
             source={require('./images/torestorpmaleri.png')}
             style={{ width: 400, height: 200 }}
+            blurRadius={imageBlur}
           />
         </View>
         <Calendar
