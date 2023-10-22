@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, TextInput, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Button, TextInput, Text, ScrollView, Image } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
 export default function App() {
@@ -67,6 +67,12 @@ export default function App() {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View>
+        <Image
+          source={require('./images/torestorpmaleri.png')}
+          style={{ width: 400, height: 200 }}
+        />
+      </View>
       <Calendar
         style={{
           height: 400,
@@ -100,7 +106,7 @@ export default function App() {
           </View>
         )}
       />
-      <StatusBar style="auto" />
+      <StatusBar style="auto" backgroundColor='white' />
       <TextInput
         placeholder='Hours'
         style={styles.hourInputContainer}
