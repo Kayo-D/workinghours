@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, TextInput, Text, ScrollView, Image } from 'react-native';
+import { StyleSheet, View, Button, TextInput, Text, ScrollView } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -9,6 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import LanguageSelector from './components/LocalizationButton';
 import enLocalization from './localization/en.json';
 import svLocalization from './localization/sv.json';
+import { Image } from 'expo-image'
 
 type RootStackParamList = {
   Home: undefined,
