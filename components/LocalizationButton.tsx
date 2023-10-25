@@ -1,7 +1,6 @@
 import React from 'react';
 import ModalSelector from 'react-native-modal-selector';
 import { View, Text, StyleSheet } from 'react-native';
-
 import enLocalization from '../localization/en.json';
 import svLocalization from '../localization/sv.json';
 

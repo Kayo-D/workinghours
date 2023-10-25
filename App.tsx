@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, TextInput, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Button, TextInput, Text, ScrollView, Alert } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -10,6 +10,7 @@ import LanguageSelector from './components/LocalizationButton';
 import enLocalization from './localization/en.json';
 import svLocalization from './localization/sv.json';
 import { Image } from 'expo-image'
+import AlertWithBlur from './components/AlertWithBlur'
 
 type RootStackParamList = {
   Home: undefined,
@@ -125,7 +126,8 @@ function HomeScreen({ navigation }: Props) {
       setNumberInput('');
       setMarkedDates({ ...markedDates });
     } else {
-      alert('Please enter a number between 1 and 24.');
+      showAlert();
+      setErrorFlag(true);
     }
   };
 
@@ -139,8 +141,27 @@ function HomeScreen({ navigation }: Props) {
     return 'yellow';
   };
 
+  const [errorFlag, setErrorFlag] = useState(false);
+
+  useEffect(() => {
+    if (errorFlag) {
+      setErrorFlag(false);
+    }
+  }, [errorFlag]);
+
+  const showAlert = () => {
+    setAlertVisible(true);
+  }
+
+  const hideAlert = () => {
+    setAlertVisible(false);
+  }
+
+  const [isAlertVisible, setAlertVisible] = useState(false);
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <AlertWithBlur isAlertVisible={isAlertVisible} hideAlert={hideAlert} />
       <View>
         <Image
           source={require('./images/torestorpmaleri.png')}
@@ -254,7 +275,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: 100,
     height: 40,
-  }
+  },
+  blurContainer: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default App;
