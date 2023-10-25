@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, TextInput, Text, ScrollView, Alert } from 'react-native';
+import { StyleSheet, View, Button, TextInput, Text, ScrollView } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,6 +11,7 @@ import enLocalization from './localization/en.json';
 import svLocalization from './localization/sv.json';
 import { Image } from 'expo-image'
 import AlertWithBlur from './components/AlertWithBlur'
+import * as Localization from 'expo-localization';
 
 type RootStackParamList = {
   Home: undefined,
@@ -26,7 +27,9 @@ type Props = {
 };
 
 function HomeScreen({ navigation }: Props) {
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
+  const deviceLanguage = Localization.locale;
+  const isSwedish = deviceLanguage.startsWith('sv');
+  const [selectedLanguage, setSelectedLanguage] = useState(isSwedish ? 'sv' : 'en');
   const localization = selectedLanguage === 'en' ? enLocalization : svLocalization;
   const [calendarKey, setCalendarKey] = useState(0);
 
