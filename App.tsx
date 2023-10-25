@@ -10,6 +10,7 @@ import LanguageSelector from './components/LocalizationButton';
 import enLocalization from './localization/en.json';
 import svLocalization from './localization/sv.json';
 import { Image } from 'expo-image'
+import AlertWithBlur from './components/AlertWithBlur'
 
 type RootStackParamList = {
   Home: undefined,
@@ -125,7 +126,7 @@ function HomeScreen({ navigation }: Props) {
       setNumberInput('');
       setMarkedDates({ ...markedDates });
     } else {
-      setBlurLevel(1);
+      showAlert();
       setErrorFlag(true);
     }
   };
@@ -144,19 +145,23 @@ function HomeScreen({ navigation }: Props) {
 
   useEffect(() => {
     if (errorFlag) {
-      Alert.alert('Error:','Please enter a number between 1 and 24.',[{
-        text: 'Cancel',
-        onPress: () => setBlurLevel(0),
-        style: 'cancel',
-      },]);
       setErrorFlag(false);
     }
   }, [errorFlag]);
 
-  let [imageBlur, setBlurLevel] = useState(0);
+  const showAlert = () => {
+    setAlertVisible(true);
+  }
+
+  const hideAlert = () => {
+    setAlertVisible(false);
+  }
+
+  const [isAlertVisible, setAlertVisible] = useState(false);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <AlertWithBlur isAlertVisible={isAlertVisible} hideAlert={hideAlert} />
       <View>
         <Image
           source={require('./images/torestorpmaleri.png')}
