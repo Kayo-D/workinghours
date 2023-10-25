@@ -19,8 +19,6 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ selectedLanguage, o
     { key: 'en', label: 'English' },
     { key: 'sv', label: 'Svenska' },
   ];
-
-  // Define the localized strings based on the selected language
   const localization = selectedLanguage === 'en' ? enLocalization : svLocalization;
 
   return (
